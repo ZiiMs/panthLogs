@@ -1,0 +1,53 @@
+{
+  "name": "website",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/website/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/apps/website",
+        "index": "apps/website/src/index.html",
+        "main": "apps/website/src/main.tsx",
+        "tsConfig": "apps/website/tsconfig.app.json",
+        "rspackConfig": "apps/website/rspack.config.js",
+        "assets": ["apps/website/src/favicon.ico", "apps/website/src/assets"]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:dev-server",
+      "options": {
+        "buildTarget": "website:build:development"
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "website:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "website:build",
+        "spa": true
+      }
+    }
+  }
+}
